@@ -102,7 +102,7 @@ you can run it by opening a terminal and typing `bash`.
 </div>
 </div>
 
-[zip-file]: {{ page.root }}/data/data-shell.zip
+[zip-file]: {{ page.root }}/data/data-shell-scripting.zip
 [git4windows]: https://gitforwindows.org/
 [wsl]: https://docs.microsoft.com/en-us/windows/wsl/install-win10
 [cygwin-putty]: http://faculty.smu.edu/reynolds/unixtut/windows.html
