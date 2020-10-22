@@ -104,13 +104,13 @@ Where *CONDITION* is typically a construct that uses two arguments which are com
 > Here you have seen how to use Bash basic *if...then...else...fi*. However, there are other possible constructs that can be beneficial depending on the case under consideration:
 > - **Else If ladder**. This structure is build as *if..elif..else..fi* and allows you to select one of many blocks of code to execute. It will test *expression1* and if it is true execute the corresponding set of commands, if *expression1* is false, it checks *expression2*, and if all the expressions are false, then it enters into the *else* block and executes the corresponding commands.
 > ~~~
-> If [ conditional expression1 ]
+> If [[ conditional expression1 ]]
 > then
 > 	commands...
-> elif [ conditional expression2 ]
+> elif [[ conditional expression2 ]]
 > then
 > 	commands...
-> elif [ conditional expression3 ]
+> elif [[ conditional expression3 ]]
 > then
 > 	commands...
 > else
@@ -149,7 +149,7 @@ fi
 >  
 >  #If the file exists then print the text and delete the file,
 >  #otherwise create an error file
->  if [ -f filetest.txt ]; then
+>  if [[ -f filetest.txt ]]; then
 >      echo "File found:"
 >      cat filetest.txt
 >      rm filetest.txt
