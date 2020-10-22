@@ -169,7 +169,7 @@ fi
 > > 
 > > #If the file exists then print the text and delete the file,
 > > #otherwise create an error file
-> > if [ -f filetest.txt ]; then
+> > if [[ -f filetest.txt ]]; then
 > >   echo "File found:"
 > >   cat filetest.txt
 > >   rm filetest.txt
@@ -179,7 +179,7 @@ fi
 > > fi
 > > 
 > > mkdir dir_script_test
-> > if [ -d dir_script_test ]; then
+> > if [[ -d dir_script_test ]]; then
 > >   echo "Dir found: dir_script_test"
 > >   rmdir dir_script_test
 > > else
