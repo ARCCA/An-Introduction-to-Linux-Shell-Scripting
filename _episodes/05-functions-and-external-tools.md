@@ -14,13 +14,32 @@ keypoints:
 ---
 
 ## Functions
-Functions allow tasks, corresponding to a number of individual operations, so be represented as a label. 
+Functions allow tasks, corresponding to a number of individual operations, so be 
+represented as a label. 
 
-Generally, a function takes one or more variables as input and in most programming languages can potentially return a value. They can be thought of as a way of creating user-defined commands which can be repeatedly used to process different sets of input. 
+Generally, a function takes one or more variables as input and in most programming
+languages can potentially return a value. They can be thought of as a way of creating
+user-defined commands which can be repeatedly used to process different sets of
+input. A typical bash function has the following structure:
 
-Unlike most programming languages, there's no easy way of returning a value from a function in Bash. There are various techniques for achieving this but are beyond the scope of this tutorial.
+~~~
+function function_name {
+<commands>
+}
+~~~
+{: .language-bash}
 
-The following code shows an example of a simple user-defined function, and how it is used by a script.
+Couple of key points regarding bash functions:
+- Unlike most programming languages, there's no easy way of returning a value from a
+function in Bash (there are various techniques for achieving this but are beyond the
+scope of this tutorial). In other programming languages it is common to have 
+arguments passed to the function listed inside the brackets (). In Bash they are 
+there only for decoration and you never put anything inside them.
+- The function definition ( the actual function itself) must appear in the script 
+before any calls to the function.
+
+The following code shows an example of a simple user-defined function, and how it is 
+used by a script.
 ~~~
 #!/bin/bash
 

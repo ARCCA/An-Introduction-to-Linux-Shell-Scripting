@@ -35,9 +35,17 @@ Hello
 > Needless to say, whilst this can simplify the process of creating and assigning variables, it requires the author to be more careful in how variables are treated, as multiplying a string by 2 will not produce an error as it would when using a strongly typed language.
 {: .callout} 
 
-## Arithmetic
-Now we know that Bash treats variables according to context, let's see how we can perform arithmetic operations whereby Bash regards the contents as a number. For example:
+## Arithmetic Expansion
+Now we know that Bash treats variables according to context, let's see how we can
+perform arithmetic operations whereby Bash regards the contents as a number. The
+format for the Bash arithmetic expansion is:
 
+~~~
+$(( arithmetic expression ))
+~~~
+{: .language-bash}
+
+For example:
 <pre style="color: silver; background: black;">
 $ echo $((1 + 3))
 4
