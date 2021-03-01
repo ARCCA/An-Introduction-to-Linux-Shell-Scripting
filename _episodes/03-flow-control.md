@@ -14,23 +14,27 @@ keypoints:
 - "Bash also has comparison operators useful to test the existance of files and directories."
 ---
 
-## Comparison Operators
+## The `if` statement
+A programming language, even a simple one, requires the ability to change its 
+functionality depending upon certain conditions. For example, if a particular file 
+exists or if the number represented by a variable is greater than some value then 
+perform some action, otherwise perform a different action. In this section we shall
+look at ways of determining the flow of a script.
 
-A programming language, even a simple one, requires the ability to change its functionality depending upon certain conditions. For example, if a particular file exists or if the number represented by a variable is greater than some value then perform some action, otherwise perform a different action. In this section we shall look at ways of determining the flow of a script.
-
-
-We have already seen how variables can be assigned and printed. But we may want to test the value of a variable in order to determine how to proceed. In this case we can use the if statement to test the validity of an expression. A typical shell comparison to test the validity of *CONDITION* has the form:
-
+We have already seen how variables can be assigned and printed. But we may want to 
+test the value of a variable in order to determine how to proceed. In this case we can
+use the if statement to test the validity of an expression. A typical shell comparison
+to test the validity of *CONDITION* has the form:
 ~~~
 if [[ CONDITION ]]; then
     echo "Condition is true"
-else
-    echo "Condition is false”
 fi
 ~~~
 {: .language-bash}
 
-Where *CONDITION* is typically a construct that uses two arguments which are compared using a comparison operator. Some of the more common comparison operators used to form conditions are summarized inthe following table:
+Where *CONDITION* is typically a construct that uses two arguments which are compared 
+using a **comparison operator**. Some of the more common comparison operators used to form
+conditions are summarized inthe following table:
 
 |    Arithmetic          ||     String            ||
 |-------------------------|---------|--------------|
@@ -41,9 +45,80 @@ Where *CONDITION* is typically a construct that uses two arguments which are com
 | **-le**  | less than or equal to               ||| 
 | **-ge**  | greater than or equal to            ||| 
 
+It is also possible to add an additional default action to be executed in case our 
+test is not satisfied, for this we use the `else` statement:
+~~~
+if [[ CONDITION ]]; then
+    echo "Condition is true"
+else
+    echo "Condition is false"
+fi
+~~~
+{: .language-bash}
 
-> ## Integer and String comparisons
-> Consider the following code snippet, it demonstrates some basic string and integer comparisons, with branching code depending upon the outcome. We first define two variables *X* and *Y* and assign them integer values (although to Bash they are still strings). The next step is to build an *if...then...else* construct to test our variables using an arithmetic comparison operator, this lets Bash know that the values stored in the variables are to be treated as numbers. If *X* is equal to *Y* the script performs one action, if not, then it performs another. After this, the script moves on to define two additional variables *A* and *B*, strings this time, and accordingly we use an string comparison operator to compare them, performing one action if the strings are equal and another if they're not.
+For example, we can perform a comparison on two integers. Copy the following command
+to a bash script (you can also try executing directly in the terminal similar as we
+did with `for` loops) called *comparing-integers.sh*:
+~~~
+if [[ $1 -eq $2 ]]
+then
+    echo ${1} is equal to ${2}
+elif [[ $1 > $2 ]]
+then
+    echo ${1} is greater than ${2}
+elif [[ $1 -lt $2 ]]
+then
+    echo ${1} is less than ${2}
+fi
+~~~
+{: .language-bash}
+
+And execute it like this (try also with other numbers):
+~~~
+$ bash comparing-integers.sh 10 3
+~~~
+{: .source}
+
+~~~
+10 is greater than 3
+~~~
+{: .output}
+
+We can also compare strings. Copy the following commands to a script called
+*comparing-strings.sh*:
+~~~
+if [[ $1 == $2 ]]
+then
+    echo strings are equal
+else
+    echo strings are different
+fi
+~~~
+{: .language-bash}
+
+And execute it like this:
+~~~
+$ bash comparing-integers.sh dog cat
+~~~
+{: .source}
+
+~~~
+strings are different
+~~~
+{: .output}
+
+> ## More on Integer and String comparisons
+> Consider the following code snippet, it demonstrates some basic string and integer
+> comparisons, with branching code depending upon the outcome. We first define two 
+> variables *X* and *Y* (you can also use `$1` and `$2` to access arguments passed)
+> to the script) and assign them integer values (remember that to Bash they are still
+> strings). 
+>
+> The next step is to build an *if...then...else* construct to test our variables 
+> using an arithmetic comparison operator. Specifically, using `-eq` lets Bash know 
+> that the values stored in the variables are to be treated as numbers. If *X* is 
+> equal to *Y* the script performs one action, if not, then it performs another.
+>
 > ~~~
 > #!/bin/bash
 > #Declare two integers for testing
@@ -56,49 +131,60 @@ Where *CONDITION* is typically a construct that uses two arguments which are com
 > else
 >     echo "${X} does not equal ${Y}"
 > fi
-> 
-> #Declare two strings
-> A='string1'
-> B='string2'
-> 
-> if [[ ${A} != ${B} ]]; then
->     echo "strings are different"
-> else
->     echo "strings are identical"
-> fi
 > ~~~
 > {: .language-bash}
 >
-> Try using some of the other comparison operators and see if your results meet your expectations. What outcome would you expect when using the string comparison operators **<** and **>**?
+> Now try the following: 
+>  - Use some of the other comparison operators and see if your results meet your 
+>    expectations. What outcome would you expect when using the string comparison 
+>    operators `<` or `>`?
+>  - Test different *numbers*, for example, compare 10 and 3; "10" and "3" (including
+>    the `"`); "10" " 3" (notice the space in front of the number 3); "40" "3". What
+>    kind of results do you obtain?
+>
 > > ## Solution
-> > 
-> > ~~~
-> > #!/bin/bash
-> > #Declare two integers for testing
-> > X=3
-> > Y=10
-> > 
-> > #Perform a comparison on the integers
-> > if [[ $X < $Y ]]; then
-> >   echo "${X} is less than ${Y}"
-> > else
-> >   echo "${X} is not less than ${Y}"
-> > fi
-> > 
-> > #Declare two strings
-> > A='string1'
-> > B='string2'
-> > 
-> > if [[ ${A} < ${B} ]]; then
-> >   echo "${A} is less than ${B}"
-> > else
-> >   echo "${A} is not less than ${B}"
-> > fi
-> > ~~~
-> > {: .language-bash}
-> > Notice that in this case the characters are compared in alphabetical (ASCII) order (even *X* and *Y*) since we are using a string comparison operator. It compares the first character of each string, and if the one on the left has a lower value then it's true, if greater then it's false; if they're the same, then it compares the second character, etc. 
+> > Notice that in the first case the results are not necessarily as we expect since
+> > the characters are compared in alphabetical (ASCII) order since we are using a 
+> > string comparison operator. 
+> >
+> > In the second case we can confirm this by noticing that bash (when instructed to
+> > compare the numbers as strings) compares the first character of each string, and 
+> > if the one on the left has a lower value then it's true, if greater then it is
+> > false; if they're the same, then it compares the second character, etc. 
 > {: .solution}
 {: .challenge}
+
+A common practical application of `if` statements in programming scripts are is to
+add a `help` flag to print some useful information about the script. For example:
+~~~
+if [[ "$1" == "--help" ]]
+    then
+    echo "Returns the file with the most number"
+    echo "of lines in the list provided"
+    echo "To execute:"
+    echo "print-larger.sh <list-of-files>"
+fi
+
+wc -l $@ | sort -n | tail -1
+~~~
+{: .language-bash}
+
+The above script **should** print the help message when executed like this:
+~~~
+print-larger.sh --help
+~~~
+{: .source}
+
+But you might see an addional error message reminding you about how `wc` works:
+~~~
+Returns the file with the most number
+of lines in the list provided
+To execute:
+print-larger.sh <list-of-files>
+wc: illegal option -- -
+usage: wc [-clmw] [file ...]
+~~~
+{: .output}
 
 > ## Other conditional structures.
 > Here you have seen how to use Bash basic *if...then...else...fi*. However, there are other possible constructs that can be beneficial depending on the case under consideration:
