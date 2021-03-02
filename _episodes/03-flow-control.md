@@ -154,15 +154,15 @@ strings are different
 > {: .solution}
 {: .challenge}
 
-A common practical application of `if` statements in programming scripts are is to
-add a `help` flag to print some useful information about the script. For example:
+A common practical application of `if` statements in programming scripts is to add 
+a `help` flag to print some useful information about the script. For example:
 ~~~
 if [[ "$1" == "--help" ]]
     then
     echo "Returns the file with the most number"
     echo "of lines in the list provided"
     echo "To execute:"
-    echo "print-larger.sh <list-of-files>"
+    echo "print-largest.sh <list-of-files>"
 fi
 
 wc -l $@ | sort -n | tail -1
@@ -171,7 +171,7 @@ wc -l $@ | sort -n | tail -1
 
 The above script **should** print the help message when executed like this:
 ~~~
-print-larger.sh --help
+bash print-largest.sh --help
 ~~~
 {: .source}
 
@@ -180,11 +180,113 @@ But you might see an addional error message reminding you about how `wc` works:
 Returns the file with the most number
 of lines in the list provided
 To execute:
-print-larger.sh <list-of-files>
+print-largest.sh <list-of-files>
 wc: illegal option -- -
 usage: wc [-clmw] [file ...]
 ~~~
 {: .output}
+
+What is happening in this case is that `bash` is evaluating the conditional test in 
+our `if` statement and executing the commands if the condition is true, however, our
+script doesn't end there and `bash` continues executing any commands after the `if` 
+statement. If for some reason we would like to exit our script at some point (e.g. in
+case some condition is not satisfied) we can use the command `exit` to instruct 
+`bash` to quit the script at that point. `exit` takes a numeric argument that is used
+to specify what caused the program to exit (convention is to use `0` if everything is
+ok, and is the numeric value used by your script if it finishes without errors, try
+using `$?` after executing your script to take a look at this value). We can tell
+`bash` to exit our script after printing our help message in this way:
+~~~
+if [[ "$1" == "--help" ]]
+    then
+    echo "Returns the file with the most number"
+    echo "of lines in the list provided"
+    echo "To execute:"
+    echo "print-largest.sh <list-of-files>"
+    exit 0
+fi
+
+wc -l $@ | sort -n | tail -1
+~~~
+{: .language-bash}
+
+~~~
+bash print-largest.sh --help
+~~~
+{: .source}
+
+~~~
+Returns the file with the most number
+of lines in the list provided
+To execute:
+print-largest.sh <list-of-files>
+~~~
+{: .output}
+
+This time the script exits inmediately after printing the help message without trying
+to execute the `wc` command.
+
+## Counting arguments with `$#`
+
+One further `bash` operator useful when working with scripts that take external 
+arguments is to use the `$#` operator. For example, try the following script (save to
+*counting-arguments.sh*):
+~~~
+echo the number of arguments received is $#
+~~~
+{: .language-bash}
+And run like this (try with a different number of arguments).
+~~~
+bash counting-arguments.sh argument1 argument2 argument3
+~~~
+{: .language-bash}
+~~~
+the number of arguments received is 3
+~~~
+{: .output}
+
+We can use `$#` to make our help printing `if` statement even more flexible. For 
+example, imagine a new researcher just received our script and has no idea what to do
+with it he or she migh be tempted to run the script like this and see what happens:
+~~~
+bash print-largest.sh
+~~~
+{: .language-bash}
+But this would led to the script hangging! (you can cancel it with 
+<kbd>Ctrl</kbd>+<kbd>C</kbd>). A more useful default behaviour would be that if your
+script requires arguments to work, trying to run it with no arguments cause the help
+message to be printed. We can do this with `$#` like this:
+~~~
+if [[ "$1" == "--help" ]] || [[ $# -eq 0 ]]
+    then
+    echo "Returns the file with the most number"
+    echo "of lines in the list provided"
+    echo "To execute:"
+    echo "print-largest.sh <list-of-files>"
+    exit 0
+fi
+
+wc -l $@ | sort -n | tail -1
+~~~
+{: .language-bash}
+
+~~~
+bash print-largest.sh
+~~~
+{: .source}
+
+~~~
+Returns the file with the most number
+of lines in the list provided
+To execute:
+print-largest.sh <list-of-files>
+~~~
+{: .output}
+
+That's a more useful default behaviour!. Notice the `if` structure we have used where
+we have included a new operator `||` (that is two vertical lines, look for the key 
+<kbd>|</kbd> in your keyboard) that works as a logical `OR` (there is an equivalent 
+`&&` operator that works as a logical `AND`) and let us two or more comparison tests.
 
 > ## Other conditional structures.
 > Here you have seen how to use Bash basic *if...then...else...fi*. However, there are other possible constructs that can be beneficial depending on the case under consideration:
