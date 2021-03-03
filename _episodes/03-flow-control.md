@@ -289,27 +289,32 @@ we have included a new operator `||` (that is two vertical lines, look for the k
 `&&` operator that works as a logical `AND`) and let us two or more comparison tests.
 
 > ## Other conditional structures.
-> Here you have seen how to use Bash basic *if...then...else...fi*. However, there are other possible constructs that can be beneficial depending on the case under consideration:
-> - **Else If ladder**. This structure is build as *if..elif..else..fi* and allows you to select one of many blocks of code to execute. It will test *expression1* and if it is true execute the corresponding set of commands, if *expression1* is false, it checks *expression2*, and if all the expressions are false, then it enters into the *else* block and executes the corresponding commands.
+> Here you have seen how to use `bash` basic *if...then...else...fi* and the Else If 
+> ladder structure. However, there are other `bash` constructs that could be useful
+> depending on the case under consideration:
+> - **Case Statements**. Is a more slightly more complex conditional structure useful
+> when we have several posible options. The general structure is:
+>
 > ~~~
-> If [[ conditional expression1 ]]
-> then
-> 	commands...
-> elif [[ conditional expression2 ]]
-> then
-> 	commands...
-> elif [[ conditional expression3 ]]
-> then
-> 	commands...
-> else
-> 	commands...
-> fi
+> case EXPRESSION in
+>   CASE1)
+>     COMMAND-LIST;;
+>   CASE2)
+>     COMMAND-LIST;;
+>   CASEN) 
+>     COMMAND-LIST;;
+>   * )
+>     COMMAND-LIST;;
+> esac
 > ~~~
 > {: .language-bash}
 {: .callout}
 
 ## File Test Operators
-In addition to variable comparisons, there are other comparison operators that can be used to query the existence and attributes of files. This would allow the script author to, for example, test whether a file exists before trying to read it and potentially producing an error. The table below summarizes some of these operators:
+In addition to variable comparisons, there are other comparison operators that can be
+used to query the existence and attributes of files. This would allow the script 
+author to, for example, test whether a file exists before trying to read it and
+potentially producing an error. The table below summarizes some of these operators:
 
 | **Operator** *ARGUMENT* | Purpose                           |
 |-------------------------|-----------------------------------|
@@ -319,7 +324,31 @@ In addition to variable comparisons, there are other comparison operators that c
 | **-w** *FILENAME*       | Test if file is writable          |
 | **-x** *FILENAME*       | Test if file is executable        |
 
-It is also possible to check for the negative outcome of a test by preceeding the statement with a **!** symbol. For example:
+For example, to test if the directory *molecules* exists:
+~~~
+$  if [ -e molecules ]
+> then
+>     echo moecules exists
+> fi
+~~~
+{: .language-bash}
+
+Another common task is to identify directories in a certain location. Try typing the
+following for loop in a script called *search-directories.sh* and run it in our 
+*data-shell-scripting* directory:
+~~~
+for filename in $@
+do
+    if [[ -d $filename ]]
+    then
+        echo $filename is a directory
+    fi
+done
+~~~
+{: .language-bash}
+
+It is also possible to check for the negative outcome of a test by preceeding the
+statement with a **!** symbol. For example:
 ~~~
 if [[ ! -f myfile.txt ]]; then
   echo "File does not exist"
@@ -327,55 +356,35 @@ fi
 ~~~
 {: .language-bash}
 
-
-> ## Exercise
-> This code shows an example of using these file test operators to check for the existence of a file before trying to display its contents. If a file test was not initially made and the file did not exist then the script would exit with an error. Checking for its existence first allows the case of its potential absence to be handled sympathetically rather than failing unexpectedly. Note that this script also includes some examples of including standard shell commands like cat and touch to display a file and create an error log file (which could in turn be tested later on respectively).
-> ~~~
->  #!/bin/bash
->  # Write some text to a file
->  echo "Hello there" >> filetest.txt
->  
->  #If the file exists then print the text and delete the file,
->  #otherwise create an error file
->  if [[ -f filetest.txt ]]; then
->      echo "File found:"
->      cat filetest.txt
->      rm filetest.txt
->  else
->      echo "File: filetest.txt doesn’t exist"
->      touch file_err.log
->  fi
-> ~~~  
-> {: .language-bash}
-> Currently *file_err.log* is never created since the *filetest.txt* file is always written to at the very start of the script. What happens when the line writing *Hello there* to *filetest.txt* is commented out? Try writing the equivalent for a directory test, or query the executable state of a file.
->
+> ## Logging a directory's content
+> Try modifying the above script to create a log file within an identified 
+> directory. The log file should contain the names of the files inside the 
+> directory. Avoid rewriting the log file if it already exists.
 > > ## Solution
-> > ~~~
-> > #!/bin/bash
-> > # Write some text to a file
-> > echo "Hello there" >> filetest.txt
-> > 
-> > #If the file exists then print the text and delete the file,
-> > #otherwise create an error file
-> > if [[ -f filetest.txt ]]; then
-> >   echo "File found:"
-> >   cat filetest.txt
-> >   rm filetest.txt
-> > else
-> >   echo "File: filetest.txt doesn’t exist"
-> >     touch file_err.log
-> > fi
-> > 
-> > mkdir dir_script_test
-> > if [[ -d dir_script_test ]]; then
-> >   echo "Dir found: dir_script_test"
-> >   rmdir dir_script_test
-> > else
-> >   echo "Dir dir_script_test doesn't exist"
-> >   touch dir_err.log
-> > fi
+> > ~~~ 
+> > for filename in $@
+> > do
+> >     if [[ -d $filename ]]
+> >     then
+> >        echo $filename is a directory
+> >        if [[ ! -f $filename/${filename}.log ]]
+> >        then
+> >            echo creating ${filename}.log
+> >            cd $filename
+> >            ls > ${filename}.log
+> >            cd ..
+> >        else
+> >            echo "Warning: ${filename}.log is already present!"
+> >        fi
+> >     fi
+> > done
 > > ~~~
 > > {: .language-bash}
+> > The above script shows an example of using a few file test operators to check for
+> > the existence of a directories and files before trying to perform an action
+> > (creating a log file). If the file test were not performed and the file already 
+> > existed we would rewrite potentially valuable data. Checking for its existence 
+> > first allows us to throw a warning in this case and perhaps performing another 
+> > action (e.g. backing up the log file already present).
 > {: .solution}
 {: .challenge}
-
