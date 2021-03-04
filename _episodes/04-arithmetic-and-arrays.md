@@ -15,31 +15,45 @@ keypoints:
 - "We can find the size of a Bash array with the construct **${#ArrayName[@]}**"
 ---
 
-## Bash Variables
-Before going into detail about how to perform arithmetic operations and define arrays in Bash, it would be useful to do a quick recap of how variables are used in Bash. As in other languages, Bash variables allow the script's author to refer to data by a label. In Bash this assignment is performed using the **=** symbol: We can display this using the command line using the export command to set the variable.
-
+## **Bash** Variables
+Before going into detail about how to perform arithmetic operations and define arrays
+in **Bash**, it would be useful to do a quick recap of how variables are used in 
+**Bash**. As in other languages, **Bash** variables allow the script's author to
+refer to data by a label. In **Bash** this assignment is performed using the `=`
+symbol: We can display this using the command line using the export command to set
+the variable.
 <pre style="color: silver; background: black;">
 $ export MYTEXT=‘Hello’
 </pre>
 
-The contents of a variable can then be obtained by a process called dereferencing or variable substitution. To return the value assigned to a variable, prefix the label using the $ symbol, i.e:
-
+The contents of a variable can then be obtained by a process called dereferencing or 
+variable substitution. To return the value assigned to a variable, prefix the label
+using the $ symbol, i.e:
 <pre style="color: silver; background: black;">
 $ echo $MYTEXT
 Hello
 </pre>
 
-> ## More on Bash variables
-> If you are familiar with a language like C++ or Fortran, where variables have explicit types such as integers or characters, you may be surprised that the contents of a Bash variable may be assigned with no declaration or preamble. This is because Bash is what is known as an untyped language. Essentially, all variables are stored as strings and the contents is treated differently depending on context. So, for example, if I try and print the contents of a variable as above using the echo command, Bash treats it like a text string. If I try and multiply it by 2 then Bash will treat it as a number.
+> ## More on **Bash** variables
+> If you are familiar with a language like C++ or Fortran, where variables have
+> explicit types such as integers or characters, you may be surprised that the
+> contents of a **Bash** variable may be assigned with no declaration or preamble.
+> This is because **Bash** is what is known as an untyped language. Essentially, all
+> variables are stored as strings and the contents is treated differently depending
+> on context. So, for example, if I try and print the contents of a variable as above
+> using the `echo` command, **Bash** treats it like a text string. If I try and
+> multiply it by 2 then **Bash** will treat it as a number.
 > 
-> Needless to say, whilst this can simplify the process of creating and assigning variables, it requires the author to be more careful in how variables are treated, as multiplying a string by 2 will not produce an error as it would when using a strongly typed language.
+> Needless to say, whilst this can simplify the process of creating and assigning
+> variables, it requires the author to be more careful in how variables are treated, 
+> as multiplying a string by 2 will not produce an error as it would when using a
+> strongly typed language.
 {: .callout} 
 
 ## Arithmetic Expansion
-Now we know that Bash treats variables according to context, let's see how we can
-perform arithmetic operations whereby Bash regards the contents as a number. The
-format for the Bash arithmetic expansion is:
-
+Now we know that **Bash** treats variables according to context, let's see how we can
+perform arithmetic operations whereby **Bash** regards the contents as a number. The
+format for the **Bash** arithmetic expansion is:
 ~~~
 $(( arithmetic expression ))
 ~~~
@@ -51,24 +65,28 @@ $ echo $((1 + 3))
 4
 </pre>
 
-Arithmetic operations are surrounded by the **$((       ))** construct. Notice that the result of this expression can be again stored in a variable.
+Arithmetic operations are surrounded by the **$((...))** construct. Notice that the 
+result of this expression can be again stored in a variable.
 <pre style="color: silver; background: black;">
 $ MYVAR=$((1 + 3))
 $ echo $MYVAR
 4
 </pre>
 
-Without this construct Bash would treat `1 + 3` as a string and print it accordingly:
+Without this construct **Bash** would treat `1 + 3` as a string and print it
+accordingly:
 <pre style="color: silver; background: black;">
 $ echo 1 + 3
 1 + 3
 </pre>
 
-Consider the following script. Here we define two variables *X* and *Y* with integer values and proceed to use the construct **$((    ))** so that Bash understands that we want to treat the variables as numbers and wish to perform some simple mathematical operations. We store the result of these operations in a variable *RESULT* and use it in further arithmetic operations.
-
+Consider the following script. Here we define two variables *X* and *Y* with integer 
+values and proceed to use the construct **$((...))** so that **Bash** understands 
+that we want to treat the variables as numbers and wish to perform some simple 
+mathematical operations. We store the result of these operations in a variable 
+*RESULT* and use it in further arithmetic operations.
 ~~~
 #!/bin/bash
-
 # Assign two variables with integer values.
 X=7
 Y=12
@@ -85,37 +103,28 @@ echo "RESULT is now ${RESULT}"
 # Divide the result by 5. Remember bash only deals with integers.
 DIVISION=$((RESULT/5))
 echo "${RESULT} divided by 5 is ${DIVISION}"
-
 ~~~
 {: .language-bash}
 
-
-
 Running this script should produce the following result:
-
 <pre style="color: silver; background: black;">
 X + Y = 19!
 RESULT is now 24
 24 divided by 5 is 4
 </pre>
 
-
 > ## Exercise
 > Now try modifying the previous script to perform some other calculations. 
-> How would you expect to be able to multiply two numbers, or take one number away from another?
+> How would you expect to be able to multiply two numbers, or take one number away
+> from another?
 >
 > > ## Solution
 > > ~~~ 
 > > #!/bin/bash
-> > 
-> > #Assign two variables with integer values.
-> > X=7
-> > Y=12
-> > 
 > > #Add these two variables together, store the result in a third variable,
 > > #and print out the result
-> > RESULT=$((X+Y))
-> > echo "X + Y = ${RESULT}!"
+> > RESULT=$(($1+$2))
+> > echo "$1 + $2 = ${RESULT}!"
 > > 
 > > #Increment the result by 5.
 > > RESULT=$((RESULT+5))
@@ -123,18 +132,65 @@ RESULT is now 24
 > > 
 > > #Divide the result by 5. Remember bash only deals with integers.
 > > DIVISION=$((RESULT/5))
-> > echo "${RESULT} divided by 5 is ${DIVISION}”
+> > echo "${RESULT} divided by 5 is ${DIVISION}"
 > > 
 > > #Solution
-> > MULTIPLY=$((X*Y))
+> > MULTIPLY=$(($1 * $2))
 > > echo ${MULTIPLY}
 > > 
-> > SUBTRACT=$((X−Y))
+> > SUBTRACT=$(($1-$2))
 > > echo ${SUBTRACT}
 > > ~~~
 > > {: .language-bash}
 > {: .solution}
 {: .challenge} 
+
+## Counters
+A useful **Bash** arithmetic feature is its capability to 
+post/pre-increment/decrement variables similar to other languagues such as C++.
+For example, try the following:
+<pre style="color: silver; background: black;">
+$ MYCOUNTER=0
+$ echo $((++MYCOUNTER))
+1
+$ echo $MYCOUNTER
+1
+$ echo $((++MYCOUNTER))
+2
+$ echo $MYCOUNTER
+2
+</pre>
+
+Now try:
+<pre style="color: silver; background: black;">
+$ MYCOUNTER=0
+$ echo $((MYCOUNTER++))
+0
+$ echo $MYCOUNTER
+1
+$ echo $((MYCOUNTER++))
+1
+$ echo $MYCOUNTER
+2
+</pre>
+
+In the first instance we use a pre-increment operator where the variable is
+incremented by 1 before a command is executed (in this case `echo`). While in the 
+second example we used a post-increment operator, where the operation/command is
+executed first and then the variable is incremented. These operators can be
+particularly useful when working with **Bash** C-styled `for` loops, for example:
+<pre style="color: silver; background: black;">
+$ for ((i = 0 ; i < 5 ; i++)); do
+>   echo "my counter has a value of $i"
+> done
+my counter has a value of 0
+my counter has a value of 1
+my counter has a value of 2
+my counter has a value of 3
+my counter has a value of 4
+</pre>
+
+You can find a more comprehensive list of **Bash** arithmetic operators [here](https://www.gnu.org/software/bash/manual/html_node/Shell-Arithmetic.html).
 
 ## Arrays
 Arrays allow the script author to associate a number of values with a single label. This means you only need to remember one variable name instead of many, which can come in particularly useful if you have potentially hundreds of values you want to store, such as the words in a text file you have just read in.
