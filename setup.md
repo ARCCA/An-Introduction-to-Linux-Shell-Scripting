@@ -35,24 +35,47 @@ In the lesson, you will find out how to access the data files in this folder.
 {::options parse_block_html="true" /}
 <div>
 <ul class="nav nav-tabs nav-justified" role="tablist">
-<li role="presentation" class="active"><a data-os="windows" href="#windows" aria-controls="Windows" role="tab" data-toggle="tab">Windows</a></li>
+<li role="presentation" class="active"><a data-os="jupyterhub" href="#jupyterhub" aria-controls="JupyterHub" role="tab" data-toggle="tab">JupyterHub</a></li>
+<li role="presentation"><a data-os="windows" href="#windows" aria-controls="Windows" role="tab" data-toggle="tab">Windows</a></li>
 <li role="presentation"><a data-os="macos" href="#macos" aria-controls="macOS" role="tab" data-toggle="tab">macOS</a></li>
 <li role="presentation"><a data-os="linux" href="#linux" aria-controls="Linux" role="tab" data-toggle="tab">Linux</a></li>
 </ul>
 
 <div class="tab-content">
-<article role="tabpanel" class="tab-pane active" id="windows">
-Computers with Windows operating systems do not automatically have a Unix Shell program installed.
+<article role="tabpanel" class="tab-pane active" id="jupyterhub">
+We're currently trialing providing the course via JupyterHub.
+  
+You will need to connect to the Cardiff University VPN service in order to access the JupyterHub website. Please follow this link for more information:  
+[https://intranet.cardiff.ac.uk/staff/supporting-your-work/it-support/wireless-and-remote-access/off-campus-access/virtual-private-network-vpn][vpn]
+
+You can access the service at: [https://host234.sparrow.cf.ac.uk][sparrow]  
+You will be presented with a warning when accessing the service as we are currently using self-signed security certificates. Please do not be alarmed and click to accept the risk in your browser.
+  
+Once you've logged in, please click on the "Terminal" button on the page to access a terminal environment you can use to run the commands featured in this course. The course material and the data-shell.zip file have already been added to the envrionement as wel and are available in the desktop folder.
+
+
+**Accounts**
+  
+Please use the following accounts to access the service. We'll provide the password during the sessions.
+
+* training1 through to training20
+</article>
+
+<article role="tabpanel" class="tab-pane" id="windows">
+Computers with Windows operating systems do not automatically have a Unix Shell program
+installed.
 In this lesson, we encourage you to use an emulator included in Git for Windows,
 which gives you access to both Bash shell commands and Git.
-If you are attending a workshop based on Software Carpentry lessons,
+If you are attending a Software Carpentry workshop session,
 it is likely you have already received instructions on how to install Git for Windows.
 
-Once installed, you can open a terminal by running the program Git Bash from the Windows start menu.
+Once installed, you can open a terminal by running the program Git Bash from the Windows start
+menu.
 
 Other solutions are available for running Bash commands on Windows.
 There is now a Bash shell command-line tool available for Windows 10.
-Additionally, you can run Bash commands on a remote computer or server that already has a Unix Shell, from your Windows machine.
+Additionally, you can run Bash commands on a remote computer or server that already has
+a Unix Shell, from your Windows machine.
 This can usually be done through a Secure Shell (SSH) client.
 One such client available for free for Windows computers is PuTTY.
 See the reference below for information on installing and using PuTTY,
@@ -110,6 +133,7 @@ you can run it by opening a terminal and typing `bash`.
 [gnome-terminal]: https://help.gnome.org/users/gnome-terminal/stable/
 [kde-konsole]: https://konsole.kde.org/
 [xterm]: https://en.wikipedia.org/wiki/Xterm
-
+[sparrow]: https://host234.sparrow.cf.ac.uk
+[vpn]: https://intranet.cardiff.ac.uk/staff/supporting-your-work/it-support/wireless-and-remote-access/off-campus-access/virtual-private-network-vpn
 
 {% include links.md %}
