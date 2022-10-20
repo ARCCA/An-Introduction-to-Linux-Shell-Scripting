@@ -192,6 +192,57 @@ my counter has a value of 4
 
 You can find a more comprehensive list of **Bash** arithmetic operators [here](https://www.gnu.org/software/bash/manual/html_node/Shell-Arithmetic.html).
 
+
+## Sequences
+
+Bash allows you to print sequences of numbers. Try the following:
+
+```bash
+$ seq 1 5
+1
+2
+3
+4
+5
+```
+
+You can also define an increment:
+
+```bash
+$ seq 1 2 20
+1
+3
+5
+7
+9
+11
+13
+15
+17
+19
+```
+
+This can be useful for example if you need to run a command a defined number of
+times in a for loop:
+
+```bash
+$ for i in $(seq 1 10)
+> do
+>    echo running iteration $i
+> done
+running iteration 1
+running iteration 2
+running iteration 3
+running iteration 4
+running iteration 5
+running iteration 6
+running iteration 7
+running iteration 8
+running iteration 9
+running iteration 10
+```
+
+
 ## Arrays
 Arrays allow the script author to associate a number of values with a single label. This means you only need to remember one variable name instead of many, which can come in particularly useful if you have potentially hundreds of values you want to store, such as the words in a text file you have just read in.
 

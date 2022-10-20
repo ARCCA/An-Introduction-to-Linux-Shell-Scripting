@@ -205,3 +205,230 @@ Note the chmod command has been commented out to prevent accidental permission c
 > {: .solution}
 {: .challenge}
 
+
+## More tools: sed and awk
+
+
+### awk simple examples
+
+We previosly show you examples of using [``grep``][grep-manual], a very powerful
+tool specialized in searching one or more input files for lines containing a match
+to a specified pattern. There are two additional tools worth mentioning:
+[``sed``][sed-manual] and [``awk``][awk-manual]. Both tools specialized in text
+parsing and general text processing. Although an in-depth explanation of how to
+use them is beyond the scope of this course, we would like to provide you with a
+couple of examples we find useful to demonstrate their functionality and tease you
+into finding out more.
+
+Let us start with ``awk``. Consider the following document in the `data` directory:
+
+```bash
+$ cd data
+$ cat amino-acids.txt 
+Alanine         Ala
+Arginine        Arg
+Asparagine      Asn
+Aspartic acid   Asp
+Cysteine        Cys
+Glutamic acid   Glu
+Glutamine       Gln
+Glycine         Gly
+Histidine       His
+Isoleucine      Ile
+Leucine         Leu
+Lysine          Lys
+Methionine      Met
+Phenylalanine   Phe
+Proline         Pro
+Serine          Ser
+Threonine       Thr
+Tryptophan      Trp
+Tyrosine        Tyr
+Valine          Val
+```
+
+We can see it is a file composed of two columns, with aminoacids long and short names.
+We can send the files content to awk and manipulate it. For example, say we are 
+interested only in the first column:
+
+```bash
+$ cat amino-acids.txt | awk '{print $1}'
+Alanine
+Arginine
+Asparagine
+Aspartic
+Cysteine
+Glutamic
+Glutamine
+Glycine
+Histidine
+Isoleucine
+Leucine
+Lysine
+Methionine
+Phenylalanine
+Proline
+Serine
+Threonine
+Tryptophan
+Tyrosine
+Valine
+```
+
+``awk`` is a programming language which many powerful tools. In the simple example
+above the section within `'{}'` is the *program* defining the actions to be performed on the input, in this case, to `print` column `$1`. Don't get confuse with bash
+interpretation of `$1` (first argument passed to a script), for ``awk`` it represents
+a column number. Try to to extract column 2 instead and even swap columns 1 and 2
+positions.
+
+A slightly more complex and maybe useful example. Consider the contents of 
+`animal-counts` in the the `data` directory. We can see that it is a CSV file
+(comma separated values).
+
+```bash
+$ cd data/animal-counts
+$ cat animals.txt 
+2012-11-05,deer,5
+2012-11-05,rabbit,22
+2012-11-05,raccoon,7
+2012-11-06,rabbit,19
+2012-11-06,deer,2
+2012-11-06,fox,4
+2012-11-07,rabbit,16
+2012-11-07,bear,1
+```
+
+If we try to extract the first column as before, we quickly find out that it doesn't
+work:
+
+```bash
+$ cat data/animal-counts/animals.txt | awk '{print $1}'
+2012-11-05,deer,5
+2012-11-05,rabbit,22
+2012-11-05,raccoon,7
+2012-11-06,rabbit,19
+2012-11-06,deer,2
+2012-11-06,fox,4
+2012-11-07,rabbit,16
+2012-11-07,bear,1
+```
+
+The problem is that by default ``awk`` expects a space as file separator, but in this
+case we have a `,`. Fortunately ``awk`` is flexible and let us define a new symbol
+to use as file separator. This needs to be defined in a special section of the ``awk``
+script, the `BEGIN` section:
+
+```bash
+$ cat data/animal-counts/animals.txt | awk 'BEGIN{FS=","} {print $1}'
+2012-11-05
+2012-11-05
+2012-11-05
+2012-11-06
+2012-11-06
+2012-11-06
+2012-11-07
+2012-11-07
+```
+
+Say that we want to know the total number of animals recorded in our file. For this
+we need to modify our script to perform a summation of every element in column 3 and
+report the final result.
+
+```bash
+$ cat data/animal-counts/animals.txt | awk 'BEGIN{FS=","} {sum+=$3} END{print sum}'
+76
+```
+
+In the above example we can see the use of the three main sections of an ``awk`` 
+program: the `BEGIN` and `END` sections and the main script. There are many many
+more things that can be accomplished with ``awk`` but hopefully these simple examples
+gave you a taste of what is possible.
+
+### sed simple examples
+
+sed is a stream editor. A stream editor is used to perform basic text transformations on an input stream (a file or input from a pipeline). 
+
+Usual syntax
+
+```bash
+$ sed SCRIPT INPUTFILE...
+```
+
+Consider the `animals.txt` file in the `data` directory:
+
+```bash
+$ cd data
+$ cat animals.txt 
+2012-11-05,deer
+2012-11-05,rabbit
+2012-11-05,raccoon
+2012-11-06,rabbit
+2012-11-06,deer
+2012-11-06,fox
+2012-11-07,rabbit
+2012-11-07,bear
+```
+
+Imagine that we made a mistake and *deer* wasn't the correct category, maybe we 
+should use *elk* instead. Amending potentially hundreds of files could be very
+time consuming but with ``sed`` this task can be performed in a few seconds:
+
+```bash
+$ sed 's/deer/elk/' animals.txt 
+2012-11-05,elk
+2012-11-05,rabbit
+2012-11-05,raccoon
+2012-11-06,rabbit
+2012-11-06,elk
+2012-11-06,fox
+2012-11-07,rabbit
+2012-11-07,bear
+```
+
+By default ``sed`` doesn't modify the input file. You can check by printing again
+content of `animals.txt`. If we wanted to save the output of ``sed`` we have two
+options:
+
+```bahs
+$ sed 's/deer/elk/' animals.txt > animals-fixed.txt
+```
+
+or modify the file in place (check ``sed --help``), but be careful as this could
+destroy the original file if you make a mistake:
+
+```bash
+$ sed -i 's/deer/elk/' animals.txt
+```
+
+But ``sed`` has many many more useful functions (check the [manual][sed-manula]),
+for example:
+
+- Print a specific line:
+
+  ```bash
+  $ sed -n '45p' file.txt
+  ```
+
+- Delete a specific line:
+
+  ```bash
+  $ sed -n '10p' file.txt
+  ```
+
+- Appending text after a line. 
+
+  ```bash
+  $ sed '2a hello there' file.txt
+  ```
+- Insert text before a line
+  ```bash
+  $ sed '2i hello there' file.txt
+  ```
+
+Things can get more complex. But hopefully the above examples can give you an 
+indication of what is available on Linux and the command line.
+
+
+[grep-manual]: https://www.gnu.org/software/grep/manual
+[sed-manual]: https://www.gnu.org/software/sed/manual
+[awk-manual]: https://www.gnu.org/software/gawk/manual/
