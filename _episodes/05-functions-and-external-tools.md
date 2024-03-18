@@ -412,7 +412,7 @@ for example:
 - Delete a specific line:
 
   ```bash
-  $ sed -n '10p' file.txt
+  $ sed -n '10d' file.txt
   ```
 
 - Appending text after a line. 
